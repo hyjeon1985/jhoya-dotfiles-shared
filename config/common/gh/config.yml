@@ -1,0 +1,10 @@
+# GitHub CLI user preferences managed by jhoya-dotfiles.
+version: 1
+git_protocol: https
+editor:
+prompt: enabled
+pager:
+aliases:
+    co: pr checkout
+http_unix_socket:
+browser:
