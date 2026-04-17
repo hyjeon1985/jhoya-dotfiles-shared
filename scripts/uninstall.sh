@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STATE_DIR="${JHOYA_STATE_DIR:-$HOME/.config/jhoya/state}"
 BIN_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/jhoya/bin"
 METADATA_PATH="$STATE_DIR/install-metadata.json"
 CURRENT_UNINSTALL="$BIN_DIR/uninstall-current-install.sh"
+
+# shellcheck source=./link.sh
+source "$SCRIPT_DIR/link.sh"
 
 remove_manifest_managed_symlinks() {
   local manifest target source
