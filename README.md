@@ -39,6 +39,14 @@ Current modes:
 make doctor
 ```
 
+## Git identity from GitHub
+If `gh` is already authenticated, you can sync your Git global identity to the
+GitHub no-reply address and persist it in `~/.config/jhoya/.env`:
+
+```bash
+make sync-git-identity-gh
+```
+
 ## Uninstall
 ```bash
 make uninstall
