@@ -256,7 +256,11 @@ ensure_bw_installed() {
     *) die "unsupported architecture for bw installation: $arch" ;;
   esac
 
-  tag="$(curl -fsSL 'https://api.github.com/repos/bitwarden/clients/releases/latest' | jq -r '.tag_name')"
+  tag="$(
+    curl -fsSL 'https://api.github.com/repos/bitwarden/clients/releases?per_page=100' \
+      | jq -r '.[] | select(.tag_name | startswith("cli-v")) | .tag_name' \
+      | head -n 1
+  )"
   [ -n "$tag" ] && [ "$tag" != "null" ] || die "failed to resolve latest Bitwarden CLI release"
   version="${tag#cli-v}"
   download_url="https://github.com/bitwarden/clients/releases/download/${tag}/${target}-${version}.zip"
