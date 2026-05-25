@@ -360,12 +360,12 @@ ensure_btop_installed() {
   tag="$(curl -fsSL 'https://api.github.com/repos/aristocratos/btop/releases/latest' | jq -r '.tag_name')"
   [ -n "$tag" ] && [ "$tag" != "null" ] || die "failed to resolve latest btop release"
   version="${tag#v}"
-  download_url="https://github.com/aristocratos/btop/releases/download/${tag}/${target}.tbz"
+  download_url="https://github.com/aristocratos/btop/releases/download/${tag}/${target}.tar.gz"
 
   tmpdir="$(mktemp -d)"
   trap 'rm -rf "$tmpdir"' RETURN
-  curl -fsSL -o "$tmpdir/btop.tbz" "$download_url"
-  tar -xjf "$tmpdir/btop.tbz" -C "$tmpdir"
+  curl -fsSL -o "$tmpdir/btop.tar.gz" "$download_url"
+  tar -xzf "$tmpdir/btop.tar.gz" -C "$tmpdir"
   install -m 0755 "$tmpdir/btop/bin/btop" "$HOME/.local/bin/btop"
   command -v btop >/dev/null 2>&1 || die "failed to install btop ${version}"
   rm -rf "$tmpdir"
