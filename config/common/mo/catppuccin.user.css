@@ -1,8 +1,8 @@
 /* ==UserStyle==
 @name           mo — Catppuccin + Pretendard
 @namespace      jhoya
-@version        1.0.0
-@description    mo 마크다운 뷰어에 Catppuccin(Mocha/Latte) 색과 개인 폰트를 입힌다
+@version        2.0.0
+@description    mo 마크다운 뷰어에 Catppuccin(다크 Mocha / 라이트 Latte)과 개인 폰트를 입힌다
 @author         jhoya
 @license        MIT
 @preprocessor   default
@@ -11,18 +11,29 @@
 
 /*
  * mo(k1LoW)는 커스텀 CSS 를 받는 자리가 없다 — 프런트엔드가 go:embed 로 바이너리에
- * 박혀 있다. 대신 색과 폰트가 전부 CSS 변수로 빠져 있어 변수만 덮으면 된다.
+ * 박혀 있다. 대신 색과 폰트가 CSS 변수로 빠져 있어 변수만 덮으면 된다.
  *
- * 폰트는 assets/fonts/ 의 것을 install.sh 가 ~/Library/Fonts 에 깔아 둔 이름을 쓴다.
- * 패밀리명은 파일명이 아니라 폰트 내부 이름이다(`fc-list : family` 로 확인).
+ * 다만 네임스페이스가 둘이다(2026-08-21 브라우저에서 실측).
+ *   앱 크롬(사이드바·헤더·배경) : mo 자신의 --color-gh-* , --font-sans/--font-mono
+ *   렌더된 문서(.markdown-body) : github-markdown-css 의 --bgColor-* --fgColor-*
+ *                                 --borderColor-* --fontStack-*
+ * 크롬만 덮으면 본문 카드가 GitHub 색으로 남아 배경과 어긋난다.
  *
- * 상류에 `--css` 나 ~/.config/mo/custom.css 가 생기면 이 파일을 그대로 그쪽에 물리고
- * 확장을 걷으면 된다. 내용은 한 글자도 바뀌지 않는다.
+ * .markdown-body 의 배경은 변수로 안 잡혀서 직접 transparent 로 둔다. 그러면 바깥
+ * 컨테이너의 Base 가 그대로 비쳐 이음매가 사라진다.
+ *
+ * 역할 매핑은 catppuccin/catppuccin 의 docs/style-guide.md 를 따른다 —
+ * 주 배경 Base, 보조 면 Mantle·Crust, 표면 Surface, 본문 Text, 라벨 Subtext,
+ * 링크 Blue, 성공 Green, 경고 Yellow, 오류 Red, 선택 Overlay2 20~30%.
+ *
+ * 상류에 `--css` 나 ~/.config/mo/custom.css 가 생기면 이 파일을 그대로 그쪽에
+ * 물리고 확장을 걷으면 된다.
  */
 
 @-moz-document url-prefix("http://localhost:6275") {
 
-  /* 타이포그래피 — 테마와 무관하다 */
+  /* 타이포그래피 — 테마와 무관하다. 폰트는 로컬 설치본을 패밀리명으로 부른다
+     (`fc-list : family` 로 확인한 이름이다. 파일명이 아니다). */
   :root {
     --font-sans: "Pretendard", "Pretendard JP", -apple-system,
                  BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -30,22 +41,56 @@
                  ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
-  /* Mocha — mo 의 다크 */
+  /* ── 다크 = Mocha ─────────────────────────────────────────────── */
+
   :root[data-theme="dark"] {
-    --color-gh-bg:            #1e1e2e; /* base     */
-    --color-gh-bg-secondary:  #181825; /* mantle   */
-    --color-gh-bg-sidebar:    #181825; /* mantle   */
-    --color-gh-bg-hover:      #313244; /* surface0 */
-    --color-gh-bg-active:     #45475a; /* surface1 */
-    --color-gh-text:          #cdd6f4; /* text     */
-    --color-gh-text-secondary:#a6adc8; /* subtext0 */
-    --color-gh-border:        #313244; /* surface0 */
-    --color-gh-header-bg:     #11111b; /* crust    */
-    --color-gh-header-text:   #cdd6f4; /* text     */
-    --color-gh-header-border: #313244; /* surface0 */
+    --color-gh-bg:            #1e1e2e; /* base     — 주 배경   */
+    --color-gh-bg-secondary:  #181825; /* mantle   — 보조 면   */
+    --color-gh-bg-sidebar:    #181825; /* mantle   — 보조 면   */
+    --color-gh-bg-hover:      #313244; /* surface0 — 표면      */
+    --color-gh-bg-active:     #45475a; /* surface1 — 표면      */
+    --color-gh-text:          #cdd6f4; /* text                 */
+    --color-gh-text-secondary:#a6adc8; /* subtext0 — 라벨      */
+    --color-gh-border:        #45475a; /* surface1             */
+    --color-gh-header-bg:     #11111b; /* crust    — 보조 면   */
+    --color-gh-header-text:   #cdd6f4; /* text                 */
+    --color-gh-header-border: #313244; /* surface0             */
   }
 
-  /* Latte — mo 의 라이트 */
+  :root[data-theme="dark"] .markdown-body {
+    --fontStack-sansSerif: var(--font-sans);
+    --fontStack-monospace: var(--font-mono);
+
+    --bgColor-default:            transparent; /* Base 가 비친다      */
+    --bgColor-muted:              #313244;     /* surface0 — 코드 면  */
+    --bgColor-neutral-muted:      #31324480;   /* surface0 40%        */
+    --bgColor-attention-muted:    #f9e2af26;   /* yellow 15%          */
+
+    --fgColor-default:            #cdd6f4;     /* text                */
+    --fgColor-muted:              #a6adc8;     /* subtext0            */
+    --fgColor-accent:             #89b4fa;     /* blue   — 링크       */
+    --fgColor-danger:             #f38ba8;     /* red    — 오류       */
+    --fgColor-success:            #a6e3a1;     /* green  — 성공       */
+    --fgColor-attention:          #f9e2af;     /* yellow — 경고       */
+    --fgColor-done:               #cba6f7;     /* mauve               */
+
+    --borderColor-default:        #45475a;     /* surface1            */
+    --borderColor-muted:          #313244;     /* surface0            */
+    --borderColor-neutral-muted:  #31324480;
+    --borderColor-accent-emphasis:    #89b4fa;
+    --borderColor-danger-emphasis:    #f38ba8;
+    --borderColor-success-emphasis:   #a6e3a1;
+    --borderColor-attention-emphasis: #f9e2af;
+    --borderColor-done-emphasis:      #cba6f7;
+
+    background-color: transparent;
+    color: #cdd6f4;
+  }
+
+  :root[data-theme="dark"] ::selection { background: #9399b240; } /* overlay2 25% */
+
+  /* ── 라이트 = Latte ───────────────────────────────────────────── */
+
   :root[data-theme="light"] {
     --color-gh-bg:            #eff1f5; /* base     */
     --color-gh-bg-secondary:  #e6e9ef; /* mantle   */
@@ -54,9 +99,41 @@
     --color-gh-bg-active:     #bcc0cc; /* surface1 */
     --color-gh-text:          #4c4f69; /* text     */
     --color-gh-text-secondary:#6c6f85; /* subtext0 */
-    --color-gh-border:        #ccd0da; /* surface0 */
+    --color-gh-border:        #bcc0cc; /* surface1 */
     --color-gh-header-bg:     #dce0e8; /* crust    */
     --color-gh-header-text:   #4c4f69; /* text     */
     --color-gh-header-border: #ccd0da; /* surface0 */
   }
+
+  :root[data-theme="light"] .markdown-body {
+    --fontStack-sansSerif: var(--font-sans);
+    --fontStack-monospace: var(--font-mono);
+
+    --bgColor-default:            transparent;
+    --bgColor-muted:              #ccd0da;   /* surface0 */
+    --bgColor-neutral-muted:      #ccd0da80;
+    --bgColor-attention-muted:    #df8e1d26;
+
+    --fgColor-default:            #4c4f69;   /* text     */
+    --fgColor-muted:              #6c6f85;   /* subtext0 */
+    --fgColor-accent:             #1e66f5;   /* blue     */
+    --fgColor-danger:             #d20f39;   /* red      */
+    --fgColor-success:            #40a02b;   /* green    */
+    --fgColor-attention:          #df8e1d;   /* yellow   */
+    --fgColor-done:               #8839ef;   /* mauve    */
+
+    --borderColor-default:        #bcc0cc;   /* surface1 */
+    --borderColor-muted:          #ccd0da;   /* surface0 */
+    --borderColor-neutral-muted:  #ccd0da80;
+    --borderColor-accent-emphasis:    #1e66f5;
+    --borderColor-danger-emphasis:    #d20f39;
+    --borderColor-success-emphasis:   #40a02b;
+    --borderColor-attention-emphasis: #df8e1d;
+    --borderColor-done-emphasis:      #8839ef;
+
+    background-color: transparent;
+    color: #4c4f69;
+  }
+
+  :root[data-theme="light"] ::selection { background: #7c7f9340; } /* overlay2 25% */
 }
