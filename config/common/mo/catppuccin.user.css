@@ -1,0 +1,62 @@
+/* ==UserStyle==
+@name           mo — Catppuccin + Pretendard
+@namespace      jhoya
+@version        1.0.0
+@description    mo 마크다운 뷰어에 Catppuccin(Mocha/Latte) 색과 개인 폰트를 입힌다
+@author         jhoya
+@license        MIT
+@preprocessor   default
+@updateURL      https://raw.githubusercontent.com/hyjeon1985/jhoya-dotfiles-shared/main/config/common/mo/catppuccin.user.css
+==/UserStyle== */
+
+/*
+ * mo(k1LoW)는 커스텀 CSS 를 받는 자리가 없다 — 프런트엔드가 go:embed 로 바이너리에
+ * 박혀 있다. 대신 색과 폰트가 전부 CSS 변수로 빠져 있어 변수만 덮으면 된다.
+ *
+ * 폰트는 assets/fonts/ 의 것을 install.sh 가 ~/Library/Fonts 에 깔아 둔 이름을 쓴다.
+ * 패밀리명은 파일명이 아니라 폰트 내부 이름이다(`fc-list : family` 로 확인).
+ *
+ * 상류에 `--css` 나 ~/.config/mo/custom.css 가 생기면 이 파일을 그대로 그쪽에 물리고
+ * 확장을 걷으면 된다. 내용은 한 글자도 바뀌지 않는다.
+ */
+
+@-moz-document url-prefix("http://localhost:6275") {
+
+  /* 타이포그래피 — 테마와 무관하다 */
+  :root {
+    --font-sans: "Pretendard", "Pretendard JP", -apple-system,
+                 BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "D2CodingLigature Nerd Font Propo", "D2CodingLigature Nerd Font",
+                 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  /* Mocha — mo 의 다크 */
+  :root[data-theme="dark"] {
+    --color-gh-bg:            #1e1e2e; /* base     */
+    --color-gh-bg-secondary:  #181825; /* mantle   */
+    --color-gh-bg-sidebar:    #181825; /* mantle   */
+    --color-gh-bg-hover:      #313244; /* surface0 */
+    --color-gh-bg-active:     #45475a; /* surface1 */
+    --color-gh-text:          #cdd6f4; /* text     */
+    --color-gh-text-secondary:#a6adc8; /* subtext0 */
+    --color-gh-border:        #313244; /* surface0 */
+    --color-gh-header-bg:     #11111b; /* crust    */
+    --color-gh-header-text:   #cdd6f4; /* text     */
+    --color-gh-header-border: #313244; /* surface0 */
+  }
+
+  /* Latte — mo 의 라이트 */
+  :root[data-theme="light"] {
+    --color-gh-bg:            #eff1f5; /* base     */
+    --color-gh-bg-secondary:  #e6e9ef; /* mantle   */
+    --color-gh-bg-sidebar:    #e6e9ef; /* mantle   */
+    --color-gh-bg-hover:      #ccd0da; /* surface0 */
+    --color-gh-bg-active:     #bcc0cc; /* surface1 */
+    --color-gh-text:          #4c4f69; /* text     */
+    --color-gh-text-secondary:#6c6f85; /* subtext0 */
+    --color-gh-border:        #ccd0da; /* surface0 */
+    --color-gh-header-bg:     #dce0e8; /* crust    */
+    --color-gh-header-text:   #4c4f69; /* text     */
+    --color-gh-header-border: #ccd0da; /* surface0 */
+  }
+}
